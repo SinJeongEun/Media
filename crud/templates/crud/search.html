@@ -1,0 +1,38 @@
+{% extends 'crud/layout.html' %}
+
+
+{% block content %}
+{% for blog in hashtag.blog_set.all %}
+<br><br>
+<h2>{{ hashtag }}가 있는 게시물</h2>
+<div class="card" style="width: 18rem";>
+        <div class="card-body">
+                {% if blog.image %}
+                <img src="{{ blog.image.url }}" class="card-img-top" alt="Card image cap">
+               {% endif %}
+          <h5 class="card-title" >{{ blog.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ blog.pub_date }}</h6>
+          <p class="card-text">{{ blog.body }}</p>
+          <a href="{% url 'edit' pk=blog.pk %}" class="card-link">수정</a>
+          <a href="{% url 'remove' pk=blog.pk %}" class="card-link">삭제</a>
+        </div>
+        {% for comment in blog.comments.all %}
+            <div class="jumbotron jumbotron-fluid">
+                <div class="card-subtitle mb-2 text-muted" style="height: 1rem";>
+                    <h6 class="display-4">{{ comment.comment_text}}</h6>
+                </div>
+            </div>
+            {% for hashtag in blog.hashtags.all %}
+            <span> {{ hashtag.name }}</span>
+            {% endfor %}
+        
+        <a href="{% url 'comment_edit' blog.id comment.id%}">댓글수정</a>
+        <a href="{% url 'comment_remove' blog.id comment.id%}">댓글삭제</a>
+        {% endfor %}
+        <a href="{% url 'comment_create' blog.id %}">댓글쓰기</a>
+
+</div>
+<br><br>
+{% endfor %}
+{% endblock %}
+
